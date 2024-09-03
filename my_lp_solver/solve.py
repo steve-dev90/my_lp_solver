@@ -24,7 +24,15 @@ def get_lp():
 
     problem_type = 'max'
 
-    return std_form2, problem_type
+    std_form3 = np.array([
+        [1, -2,  3, 0, 0, 0],
+        [0,  1,  1, 1, 0, 4],
+        [0,  1, -1, 0, 1, 6]
+    ]).astype(np.float32)
+    problem_type = 'min'
+
+
+    return std_form3, problem_type
 
 if __name__ == "__main__":
     main()

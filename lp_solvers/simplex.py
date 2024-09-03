@@ -5,27 +5,32 @@ from utility.utility import pivot
 def simplex(lp, problem_type):
     optimal = False
     loop_num = 0
-    while (not optimal) | (loop_num > 3):
+    while (not optimal) & (loop_num < 2):
         entering_row, entering_col = determine_entering_var(lp, problem_type)
         print(f'Entering variable : row = {entering_row}, col = {entering_col}')
         pivoted_lp = pivot(lp, entering_row, entering_col)
         print(pivoted_lp)
-        optimal = check_optimal(lp)
+        optimal = check_optimal(lp, problem_type)
         print(f'Pivoted Lp optimal: {optimal}')
         loop_num += 1
 
-def check_optimal(lp):
+def check_optimal(lp, problem_type):
     #identify the non basic variables (NBVs)
     num_basic_vars = 0
     for j in range(0, lp.shape[1]):
         #Check if variable is a non-basic variable
-        print()
-        if np.sum(np.abs(lp[:,j])) != 1:
-            #if any NBV is negative an optimal solution has not been found
-            if lp[0, j] < 0:
+        if np.sum(np.abs(lp[:, j])) != 1:
+            # Check for negative NBV in maximization problems
+            if problem_type == 'max' and lp[0, j] < 0:
+                return False
+
+            # Check for positive NBV in minimization problems
+            if problem_type == 'min' and lp[0, j] > 0:
                 return False
         else:
+            # Increment the number of basic variables
             num_basic_vars += 1
+
     #There should be m = number of rows basic variables
     if num_basic_vars < lp.shape[0]:
         print("Insufficient number of basic variables found")
