@@ -17,6 +17,7 @@ def simplex(lp, problem_type):
 def check_optimal(lp, problem_type):
     #identify the non basic variables (NBVs)
     num_basic_vars = 0
+    num_top_row_zero_coeffs = 0
     for j in range(0, lp.shape[1]):
         #Check if variable is a non-basic variable
         if np.sum(np.abs(lp[:, j])) != 1:
@@ -27,6 +28,10 @@ def check_optimal(lp, problem_type):
             # Check for positive NBV in minimization problems
             if problem_type == 'min' and lp[0, j] > 0:
                 return False
+
+            # Check for LPs with alternative solutions
+            if lp[0, j] == 0:
+                num_top_row_zero_coeffs += 1
         else:
             # Increment the number of basic variables
             num_basic_vars += 1
@@ -35,6 +40,10 @@ def check_optimal(lp, problem_type):
     if num_basic_vars < lp.shape[0]:
         print("Insufficient number of basic variables found")
         return False
+
+    if num_top_row_zero_coeffs > 0:
+        print("There may be alternative solutions to the LP")
+
     return True
 
 def determine_entering_var(lp, problem_type):
