@@ -31,8 +31,15 @@ def get_lp():
     ]).astype(np.float32)
     problem_type = 'min'
 
+    #Unbounded LP
+    std_form4 = np.array([
+        [1, -36, -30,  3,  4, 0, 0, 0],
+        [0,   1,   1, -1,  0, 1, 0, 5],
+        [0,   6,   5,  0, -1, 0, 1, 10]
+    ]).astype(np.float32)
+    problem_type = 'max'
 
-    return std_form3, problem_type
+    return std_form4, problem_type
 
 if __name__ == "__main__":
     main()

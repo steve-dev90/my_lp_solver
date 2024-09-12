@@ -5,7 +5,7 @@ from utility.utility import pivot
 def simplex(lp, problem_type):
     optimal = False
     loop_num = 0
-    while (not optimal) & (loop_num < 2):
+    while (not optimal) & (loop_num < 3):
         entering_row, entering_col = determine_entering_var(lp, problem_type)
         print(f'Entering variable : row = {entering_row}, col = {entering_col}')
         pivoted_lp = pivot(lp, entering_row, entering_col)
@@ -54,6 +54,10 @@ def determine_entering_var(lp, problem_type):
     else:
         #Find the most positive col in the first row for a minimise LP problem
         entering_col = np.argmax(lp[0])
+
+    #Check if solution is unbounded
+    if all(lp[1:, entering_col]< 0):
+        raise Exception("All rows in ratio test have a negative number - unbounded LP")
 
     #find the lowest ratio rhs/col coeff
     lowest_ratio = np.max(lp[:,-1])
