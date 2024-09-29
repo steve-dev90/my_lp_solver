@@ -1,11 +1,27 @@
+import argparse
+
 import numpy as np
 
 from lp_solvers.simplex import simplex
 
 def main():
-    lp, problem_type = get_lp()
+
+    parser = argparse.ArgumentParser(description='Solve a linear optimisation problem')
+    parser.add_argument('std_form_tableau', type = str,
+                        help='Path to csv with lp problem as a standard form tableau')
+    parser.add_argument('--problem_type', type = str, default = 'max',
+                        help='Type of lp problem', choices=['min', 'max'])
+
+    args = parser.parse_args()
+    # lp, problem_type = get_lp()
+
+    lp = np.loadtxt(args.std_form_tableau,
+                 delimiter=",", dtype=float)
     print(lp)
-    simplex(lp, problem_type)
+    lp_solution = simplex(lp, args.problem_type)
+
+    print("LP SOLUTION")
+    print(lp_solution)
 
 def get_lp():
     std_form = np.array([

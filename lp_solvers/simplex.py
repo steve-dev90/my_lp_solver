@@ -5,14 +5,17 @@ from utility.utility import pivot
 def simplex(lp, problem_type):
     optimal = False
     loop_num = 0
+    lp_loop = lp
     while (not optimal) & (loop_num < 3):
-        entering_row, entering_col = determine_entering_var(lp, problem_type)
+        entering_row, entering_col = determine_entering_var(lp_loop, problem_type)
         print(f'Entering variable : row = {entering_row}, col = {entering_col}')
         pivoted_lp = pivot(lp, entering_row, entering_col)
         print(pivoted_lp)
-        optimal = check_optimal(lp, problem_type)
+        optimal = check_optimal(pivoted_lp, problem_type)
         print(f'Pivoted Lp optimal: {optimal}')
+        lp_loop = pivoted_lp
         loop_num += 1
+    return lp_loop
 
 def check_optimal(lp, problem_type):
     #identify the non basic variables (NBVs)
